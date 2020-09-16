@@ -3,15 +3,20 @@ def sumThree(arr, target):
         Find three elements in a sorted array that sums to a target value. Assume this target value appears only once.
 
         Arguments: 
-        arr -- a sorted array of integer or floating numbers.
-        target -- an integer or floating number value.
+        arr -- a sorted array of non-negative integer or floating numbers.
+        target -- a non-negative integer or floating point number.
 
         Returns:
-        Three indices of the found elements (the index of the 1st element is 1 not 0). If not found, a print message that shows that.
+        Three indices of the found elements (the index of the 1st element is 1 not 0, for instance). If not found, a print message that shows that.
     """
+    # Check for arrays with less than 3 items
+    if len(arr) < 3:
+        return -1, -1, -1
+
     index1 = 0
     index2 = 1
     index3 = len(arr) - 1
+    
     while index1 < index3 and index2 < index3:
         total = arr[index1] + arr[index2] + arr[index3]
         if total > target:

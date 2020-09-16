@@ -1,1 +1,4 @@
 .venv/
+.pytest_cache/
+tests/__pycache__/
+/pointers_techniques/__pycache__
