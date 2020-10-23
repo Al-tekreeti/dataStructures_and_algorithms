@@ -35,6 +35,21 @@ def test_singlyLinkedList5():
     n_after = List.getSize()
     assert n_after == n_before + 1
 
+#6. removing the nth element from the end of the list
+def test_singlyLinkedList6():
+    List = LinkedList([1,2,3])
+    with pytest.raises(Exception) as e:
+        assert List.removeFromEnd(4)
+        assert str(e.value) == f'The size of the list is smaller than 4'
+
+#7. removing the nth element from the end of the list
+def test_singlyLinkedList7():
+    List = LinkedList()
+    with pytest.raises(Exception) as e:
+        assert List.removeFromEnd(4)
+        assert str(e.value) == f'The list is empty!'
+
+
 
 if __name__ == "main":
     test_singlyLinkedList1()
@@ -42,3 +57,5 @@ if __name__ == "main":
     test_singlyLinkedList3()
     test_singlyLinkedList4()
     test_singlyLinkedList5()
+    test_singlyLinkedList6()
+    test_singlyLinkedList7()

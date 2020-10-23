@@ -1,7 +1,7 @@
 class LinkedListUnit:
-        def __init__(self, elem):
+        def __init__(self, elem=None, addr=None):
             self.elem = elem
-            self.addr = None
+            self.addr = addr
 
 class LinkedList:
     def __init__(self, itemList=None):
@@ -12,10 +12,19 @@ class LinkedList:
 
     def insert(self, item):
         node = LinkedListUnit(item)
-        if self.head:
-            node.addr = self.head
-        
-        self.head = node
+        if self.head == None:
+            self.head = node
+            return 
+
+        tmp = self.head
+        while tmp:
+            if tmp.addr:
+                tmp = tmp.addr
+            else:
+                break
+
+        tmp.addr = node
+        return
 
     def delete(self):
         if self.head:
@@ -32,6 +41,32 @@ class LinkedList:
             node = node.addr
 
         return length
+    
+    def removeFromEnd(self, nTh):
+        """ Assume the size of the list is unknown"""
+        if self.head == None:
+            raise Exception("The list is empty!")
+    
+        node1 = self.head
+        node2 = self.head
+        count = nTh
+        while count:
+            node2 = node2.addr
+            if node2 == None and count > 1:
+                raise Exception(f'The size of the list is smaller than {nTh}')
+            count -= 1
+        
+        if node2 == None:
+            self.head = node1.addr
+            return True
+
+        while node2 != None:
+            tmp = node1
+            node1 = node1.addr
+            node2 = node2.addr
+
+        tmp.addr = node1.addr
+        return True
 
     def __repr__(self):
         tmp = self.head
@@ -44,6 +79,6 @@ class LinkedList:
         return str(llist)
         
 if __name__ == "__main__":
-    List = LinkedList([])
-    List.delete()
-    print(List.getSize())
+    List = LinkedList([1,2,3,4,5,6,7,8,9,10])
+    List.removeFromEnd(1)
+    print(type(List))
