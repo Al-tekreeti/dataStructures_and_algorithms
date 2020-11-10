@@ -17,7 +17,7 @@ class LinkedList:
             return 
 
         tmp = self.head
-        while tmp:
+        while True:
             if tmp.addr:
                 tmp = tmp.addr
             else:
@@ -27,6 +27,7 @@ class LinkedList:
         return
 
     def delete(self):
+        """ Remove an element from the head"""
         if self.head:
             node = self.head
             self.head = node.addr
@@ -81,4 +82,4 @@ class LinkedList:
 if __name__ == "__main__":
     List = LinkedList([1,2,3,4,5,6,7,8,9,10])
     List.removeFromEnd(1)
-    print(type(List))
+    print(List)
