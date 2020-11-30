@@ -140,8 +140,7 @@ if __name__ == "__main__":
     tree.root.right.left.right = Node("M")
     tree.root.right.right.right = Node("O")
     tree.root.right.right.left = Node("N") """
-    # sorted tree
-    # Set up tree
+    # Set up sorted tree
     tree = BinaryTree(4)
 
     # Insert elements
