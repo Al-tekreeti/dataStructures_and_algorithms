@@ -188,8 +188,117 @@ def getLongestSubArrayWithOnes(arr, K):
         maxLength = max(maxLength, w2 - w1 + 1)
     return maxLength
 
+def findPermutation(string, pattern):
+    """Problem challenge 1
+    """
+    w1, count, = 0, 0
+
+    patternDict = {}
+    for char in pattern:
+        if char not in patternDict:
+            patternDict[char] = 0
+        patternDict[char] += 1
+
+    for w2 in range(len(string)):
+        if string[w2] in patternDict:
+            count += 1
+        if w2 - w1 + 1 > len(pattern):
+            if string[w1] in patternDict:
+                count -= 1
+            w1 += 1
+        if count == len(pattern):
+            return True
+    return False
+
+def findStringAnagrams(string, pattern):
+    """Problem challenge 2
+    """
+    w1, count = 0, 0
+    indices_list = []
+    freqDict = {}
+    
+    patternDict = {}
+    for char in pattern:
+        if char not in patternDict:
+            patternDict[char] = 0
+        patternDict[char] += 1
+    
+    for w2 in range(len(string)):
+        if string[w2] in patternDict:
+            if string[w2] not in freqDict:
+                freqDict[string[w2]] = 0
+            if freqDict[string[w2]] == 0:
+                count += 1
+            freqDict[string[w2]] += 1
+        if w2 - w1 + 1 > len(pattern):
+            if freqDict[string[w1]] == 1:
+                count -= 1
+            freqDict[string[w1]] -= 1
+            w1 += 1
+        if count == len(pattern):
+            indices_list.append(w1)
+    return indices_list
+
+def findSubString(string, pattern):
+    """Problem challenge 3
+    """
+    w1, count = 0, 0
+    result_list = []
+    freqDict = {}
+    for letter in pattern:
+        freqDict[letter] = 0
+    
+    for w2 in range(len(string)):
+        if string[w2] in freqDict:
+            freqDict[string[w2]] += 1
+            if freqDict[string[w2]] == 1:
+                if count == 0:
+                    w1 = w2
+                count += 1
+            else:
+                if freqDict[string[w1]] == 1:
+                    count -= 1
+                freqDict[string[w1]] -= 1
+                w1 += 1
+        if string[w1] in freqDict:
+            if freqDict[string[w1]] > 1:
+                freqDict[string[w1]] -= 1
+                w1 += 1
+        else:
+            w1 += 1
+        if count == len(pattern):
+            result_list = string[w1:w2 + 1]
+            return result_list
+    return result_list
+
+def findWordsConcat(string, words):
+    """Problem challenge 4
+    """
+    w1, count = 0, 0
+    indices_list = []
+    wordLen = len(words[0])
+    wordsDict = {word: 1 for word in words}
+    freqWordDict = {}
+    for w2 in range(wordLen - 1, len(string), wordLen):
+        word = string[w2 - wordLen + 1:w2 + 1]
+        if word in wordsDict:
+            if word not in freqWordDict:
+                freqWordDict[word] = 0
+            if freqWordDict[word] == 0:
+                count += 1
+            freqWordDict[word] += 1
+        if w2 - w1 + 1 > len(words) * wordLen:
+            word = string[w1: w1 + wordLen]
+            if freqWordDict[word] == 1:
+                count -= 1
+            freqWordDict[word] -= 1
+            w1 += wordLen
+        if count == len(words):
+            indices_list.append(w1)
+    return indices_list
+
 def main():
-    result = getLongestSubArrayWithOnes([0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1], 3)
+    result = findWordsConcat("catfoxcat", ["cat", "fox"])
     print("The result is: " + str(result))
 
 main()
