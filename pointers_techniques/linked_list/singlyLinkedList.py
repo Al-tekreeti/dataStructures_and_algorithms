@@ -1,13 +1,13 @@
-class LinkedListUnit:
-        def __init__(self, elem=None, addr=None):
-            self.elem = elem
-            self.addr = addr
-        
-        def setAddr(self, addr):
-            self.addr = addr
-        
-        def setElem(self, elem):
-            self.elem = elem
+class Node:
+    def __init__(self, elem=None, addr=None):
+        self.elem = elem
+        self.addr = addr
+    
+    def setAddr(self, addr):
+        self.addr = addr
+    
+    def setElem(self, elem):
+        self.elem = elem
 
 class LinkedList:
     def __init__(self, itemList=None):
@@ -17,7 +17,7 @@ class LinkedList:
                 self.insert(item)
 
     def insert(self, item):
-        node = LinkedListUnit(item)
+        node = Node(item)
         if self.head == None:
             self.head = node
             return 
