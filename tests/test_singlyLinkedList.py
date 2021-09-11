@@ -113,12 +113,27 @@ def test_singlyLinkedList17():
     node1.addr = node2
     assert List.detectCycle() == True
 
-#18.An empty list raises an expception
+#18. An empty list raises an expception
 def test_singlyLinkedList18():
     List = LinkedList()
     with pytest.raises(Exception) as e:
         assert List.detectCycle()
         assert str(e.value) == f'The list is empty!'
+
+#19. Cycle length: the last node linked to the first node
+def test_singlyLinkedList19():
+    List = LinkedList([1,2,3,4,5,6,7,8,9,10])
+    node1 = List.getNode(9)
+    node2 = List.getNode(0)
+    node1.addr = node2
+    assert List.findCycleLength() == 10
+
+#20. Cycle length: a node linked to itself
+def test_singlyLinkedList20():
+    List = LinkedList([1,2,3,4,5,6,7,8,9,10])
+    node1 = List.getNode(9)
+    node1.addr = node1
+    assert List.findCycleLength() == 1
 
 if __name__ == "main":
     test_singlyLinkedList1()
@@ -139,3 +154,5 @@ if __name__ == "main":
     test_singlyLinkedList16()
     test_singlyLinkedList17()
     test_singlyLinkedList18()
+    test_singlyLinkedList19()
+    test_singlyLinkedList20()
