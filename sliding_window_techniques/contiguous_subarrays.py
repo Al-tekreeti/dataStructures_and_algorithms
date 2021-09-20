@@ -87,8 +87,31 @@ def getSmallestSubarray(arr, S):
             w1 += 1
     return min_window
 
+def longest_substring_with_k_distinct(str, k):
+    """Find the longest substring which has no more than K distinct letters (version 2)
+    """
+    index1 = 0
+    longest_ss = 0
+    char_dict = {}
+    for index2 in range(len(str)):
+        if str[index2] in char_dict:
+            char_dict[str[index2]] += 1
+        else:
+            char_dict[str[index2]] = 1
+        
+        while len(char_dict.keys()) > k and index1 <= index2:
+            char_dict[str[index1]] -= 1
+            if char_dict[str[index1]] == 0:
+                char_dict.pop(str[index1])
+            index1 += 1
+
+        if index2 - index1 + 1 > longest_ss:
+            longest_ss = index2 - index1 + 1
+    
+    return longest_ss
+
 def getLongestSubstring(string, K):
-    """Find the longest substring which has no more than K distinct letters
+    """Find the longest substring which has no more than K distinct letters (version1)
     """
     # if the length of string is less than K, return string's length
     if len(string) <= K:
@@ -298,7 +321,12 @@ def findWordsConcat(string, words):
     return indices_list
 
 def main():
-    result = findWordsConcat("catfoxcat", ["cat", "fox"])
-    print("The result is: " + str(result))
+    #result = findWordsConcat("catfoxcat", ["cat", "fox"])
+    #print("The result is: " + str(result))
+    print("Length of the longest substring: " + str(longest_substring_with_k_distinct("araaci", 2)))
+
+    print("Length of the longest substring: " + str(longest_substring_with_k_distinct("araaci", 1)))
+
+    print("Length of the longest substring: " + str(longest_substring_with_k_distinct("cbbebi", 3)))
 
 main()
