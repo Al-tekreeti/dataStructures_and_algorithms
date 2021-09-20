@@ -88,7 +88,7 @@ def getSmallestSubarray(arr, S):
     return min_window
 
 def longest_substring_with_k_distinct(str, k):
-    """Find the longest substring which has no more than K distinct letters (version 2)
+    """Find the longest substring which has no more than K distinct letters (version 2). The time complexity for the outer for loop is O(N), where N is the length of str. For the while loop, the maximum number of distinct letters cannot exceed N (the distance between index1 and index2 as well). Therefore, in one iteration of the for loop, while loop will execute for N-k iterations, and for the remaining N-1 for loop iterations, the while loop will execute once. Hence, O(N + 1 * (N - k) + (N - 1) * 1) = O(3N - k - 1) = O(N), giving that N >> k for most cases.
     """
     index1 = 0
     longest_ss = 0
