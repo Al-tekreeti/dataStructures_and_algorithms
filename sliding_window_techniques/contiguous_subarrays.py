@@ -1,4 +1,5 @@
 import math
+import copy
 
 def getSubarrayMean(arr, K):
     """ Evaluate the average of adjacent subarrays.
@@ -141,8 +142,31 @@ def getLongestSubstring(string, K):
             w1 += 1
     return max_window
 
-def getFruitBasketsWeight(fruits):
+def fruits_into_baskets(fruits):
+    """version2
     """
+    max_fruit_number = 0
+    index1 = 0
+    fruits_dict = {}
+    for index2 in range(len(fruits)):
+        if fruits[index2] in fruits_dict:
+            fruits_dict[fruits[index2]] += 1
+        else:
+            fruits_dict[fruits[index2]] = 1  
+        
+        while len(fruits_dict.keys()) > 2 and index1 <= index2:
+            fruits_dict[fruits[index1]] -= 1
+            if fruits_dict[fruits[index1]] == 0:
+                fruits_dict.pop(fruits[index1])
+            index1 += 1
+        
+        if sum(fruits_dict.values()) > max_fruit_number:
+            max_fruit_number = sum(fruits_dict.values())
+
+    return max_fruit_number
+
+def getFruitBasketsWeight(fruits):
+    """version1
     """
     w1 = 0
     baskets = {}
@@ -157,6 +181,29 @@ def getFruitBasketsWeight(fruits):
                 baskets.pop(fruits[w1])
             w1 += 1
     return sum(baskets.values())
+
+def no_repeat_substring(string):
+    """
+    """
+    chars_dict = {}
+    longest_ss, index1 = 0, 0
+    for index2 in range(len(string)):
+        if string[index2] in chars_dict:
+            chars_dict[string[index2]] += 1
+        else:
+            chars_dict[string[index2]] = 1
+
+        while chars_dict[string[index2]] > 1 and index1 <= index2:
+            chars_dict[string[index1]] -= 1
+            if chars_dict[string[index1]] == 0:
+                chars_dict.pop(string[index1])
+            
+            index1 += 1
+
+        if len(chars_dict.keys()) > longest_ss:
+            longest_ss = len(chars_dict.keys())
+
+    return longest_ss
 
 def getUniqueLongestSubString(string):
     """
@@ -176,8 +223,38 @@ def getUniqueLongestSubString(string):
             strDict[string[w2]] = 1
     return maxLength
 
+def length_of_longest_substring(str, k):
+    """version 2
+    """
+    # no need to run the algorithm if str is shorter than k
+    if k >= len(str):
+        return len(str)
+
+    index1, longest_ss, to_be_replaced = 0, 0, 0
+    chars_dict = {}
+
+    for index2 in range(len(str)):
+        if str[index2] in chars_dict:
+            chars_dict[str[index2]] += 1
+        else:
+            chars_dict[str[index2]] = 1
+
+        to_be_replaced = sum(chars_dict.values()) - max(chars_dict.values())
+
+        while to_be_replaced > k and index1 <= index2:
+            chars_dict[str[index1]] -= 1
+            if chars_dict[str[index1]] == 0:
+                chars_dict.pop(str[index1])
+            index1 += 1
+            to_be_replaced = sum(chars_dict.values()) - max(chars_dict.values())
+        
+        if sum(chars_dict.values()) > longest_ss:
+            longest_ss = sum(chars_dict.values())
+    
+    return longest_ss
+
 def getLongestSameCharSubString(string, K):
-    """with no more than K replacements.
+    """with no more than K replacements (version 1).
     """
     w1 = 0
     maxLength = 0
@@ -197,9 +274,37 @@ def getLongestSameCharSubString(string, K):
         maxLength = max(maxLength, w2 - w1 + 1)
     return maxLength
 
+def length_of_longest_substring_with_ones(arr, k):
+    """
+    version2
+    """
+    if len(arr) <= k:
+        return len(arr)
+    
+    index1, longest_sa = 0, 0
+    ones_zeros_dict = {}
+    for index2 in range(len(arr)):
+        if arr[index2] in ones_zeros_dict:
+            ones_zeros_dict[arr[index2]] += 1
+        else:
+            ones_zeros_dict[arr[index2]] = 1
+        
+        while 0 in ones_zeros_dict and ones_zeros_dict[0] > k and index1 <= index2:
+            ones_zeros_dict[arr[index1]] -= 1
+            if ones_zeros_dict[arr[index1]] == 0:
+                ones_zeros_dict.pop(arr[index1])
+            index1 += 1
+
+        if sum(ones_zeros_dict.values()) > longest_sa:
+            longest_sa = sum(ones_zeros_dict.values())
+    
+    return longest_sa
+
+
 def getLongestSubArrayWithOnes(arr, K):
     """
-    """
+    version1
+    """ 
     w1, onesCount, maxLength = 0, 0, 0
     for w2 in range(len(arr)):
         if arr[w2] == 1:
@@ -211,8 +316,45 @@ def getLongestSubArrayWithOnes(arr, K):
         maxLength = max(maxLength, w2 - w1 + 1)
     return maxLength
 
+def find_permutation(string, pattern):
+    """
+    version 2
+    """ 
+    if len(string) < len(pattern):
+        return False
+
+    pattern_dict, permut_dict = {}, {}
+    index1 = 0
+    # create a dict for pattern
+    for letter in list(pattern):
+        if letter in pattern_dict:
+            pattern_dict[letter] += 1
+        else:
+            pattern_dict[letter] = 1
+
+    for index2 in range(len(string)):
+        if string[index2] in pattern_dict:# the letter exists in pattern
+            if string[index2] in permut_dict:# exists in permutation dict too
+                if pattern_dict[string[index2]] > permut_dict[string[index2]]:
+                    permut_dict[string[index2]] += 1
+                else:# if pattern_dict[letter] = permut_dict[letter], reinitialize
+                    permut_dict = {}
+                    permut_dict[string[index2]] = 1
+            else:
+                permut_dict[string[index2]] = 1
+        else:
+            permut_dict = {}
+        
+        while string[index2] in pattern_dict and index2 - index1 + 1 > len(pattern):# this while loop can be replaced by an if clause, but kept like this to promote the developed template so far for sliding window
+            index1 += 1
+
+        if pattern_dict == permut_dict:# assuming index2 - index1 + 1 = pattern length
+            return True
+
+    return False
+
 def findPermutation(string, pattern):
-    """Problem challenge 1
+    """Problem challenge 1 (version 1)
     """
     w1, count, = 0, 0
 
@@ -323,10 +465,11 @@ def findWordsConcat(string, words):
 def main():
     #result = findWordsConcat("catfoxcat", ["cat", "fox"])
     #print("The result is: " + str(result))
-    print("Length of the longest substring: " + str(longest_substring_with_k_distinct("araaci", 2)))
-
-    print("Length of the longest substring: " + str(longest_substring_with_k_distinct("araaci", 1)))
-
-    print("Length of the longest substring: " + str(longest_substring_with_k_distinct("cbbebi", 3)))
+    print('Permutation exist: ' + str(find_permutation("oidbcaf", "abc")))
+    print('Permutation exist: ' + str(find_permutation("odicf", "dc")))
+    print('Permutation exist: ' + str(find_permutation("bcdxabcdy", "bcdyabcdx")))
+    print('Permutation exist: ' + str(find_permutation("aaacb", "abc")))
+    print('Permutation exist: ' + str(find_permutation("eidbaooo", "ab")))
+    print('Permutation exist: ' + str(find_permutation("eidboaoba", "ab")))
 
 main()
