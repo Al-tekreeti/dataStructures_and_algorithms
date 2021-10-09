@@ -257,8 +257,42 @@ def find_quadreplets(arr, target_sum):
     
     return quadreplets
 
+def compare_strings_with_backspaces(str1, str2):
+    """problem challenge 2
+    """
+    index1, index2 = len(str1) - 1, len(str2) - 1
+    bs_count1, bs_count2 = 0, 0
+
+    while index1 >= 0 and index2 >= 0:
+        while str1[index1] == '#':
+            bs_count1 += 1
+            index1 -= 1
+            if index1 < 0:
+                return False
+        
+        if bs_count1 > 0:
+            index1 -= bs_count1
+            bs_count1 = 0
+
+        while str2[index2] == '#':
+            bs_count2 += 1
+            index2 -= 1
+            if index2 < 0:
+                return False
+        
+        if bs_count2 > 0:
+            index2 -= bs_count2
+            bs_count2 = 0
+
+        if str2[index2] == str1[index1]:
+            index1 -= 1
+            index2 -= 1
+        else:
+            return False
+
+    return True
 
 
 if __name__ == "__main__":
-    result = find_quadreplets([2, 0, -1, 1, -2, 2], 2)
+    result = compare_strings_with_backspaces("a#c", "b")
     print(f"The result is {result}")
