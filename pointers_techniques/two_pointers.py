@@ -113,7 +113,7 @@ def findSmallestTripletsSumCloseToTarget(arr, target_sum):
     return closest_sum
 
 def findTripletsWithSmallerSum(arr, target_sum):
-    """
+    """version1
     """
     triplet_count = 0
     arr.sort()
@@ -132,8 +132,46 @@ def findTripletsWithSmallerSum(arr, target_sum):
         index += 1
     return triplet_count
 
+def findTripletsWithSmallerSum2(arr, target_sum):
+    """version2
+    """
+    arr.sort()
+    index0, index1, index2 = 0,1, len(arr) - 1
+    triplet_sum = lambda: arr[index0] + arr[index1] + arr[index2]
+    smallest_sum = triplet_sum()
+
+    while index1 < index2:
+        if abs(smallest_sum - target_sum) > abs(triplet_sum() - target_sum):
+            smallest_sum = triplet_sum()
+
+        elif abs(smallest_sum - target_sum) == abs(triplet_sum() - target_sum):
+            smallest_sum = min(smallest_sum, triplet_sum())
+
+        if smallest_sum > target_sum:
+            if index0 > 0:
+                index0 -= 1
+            elif index1 > index0:
+                index1 -= 1
+            elif index2 > index1:
+                index2 -= 1
+
+        elif smallest_sum < target_sum:
+            if index0 < index1:
+                index0 += 1
+                if index0 == index1:
+                    index1 += 1
+            elif index1 < index2:
+                index1 += 1
+            elif index2 < len(arr) - 1:
+                index2 += 1
+
+        else:
+            return smallest_sum
+    
+    return smallest_sum
+
 def findSubArrays(arr, target):
-    """Find all contiguous subarrays in arr whose elements' product is less than the target number. In the worst case, for an n-element array, we have n*(n+1)/2 subarrays. Hence, the time complexity approaches O(n^2). In the manual, it is believed to be O(n^3). Note: as the requirement is to enumerate or print all combinations that satisfy some conditions, there is no short cut. We have to employ the necessary loops to get the combinations.
+    """version1: Find all contiguous subarrays in arr whose elements' product is less than the target number. In the worst case, for an n-element array, we have n*(n+1)/2 subarrays. Hence, the time complexity approaches O(n^2). In the manual, it is believed to be O(n^3). Note: as the requirement is to enumerate or print all combinations that satisfy some conditions, there is no short cut. We have to employ the necessary loops to get the combinations.
     """
     list_arr = []
     for index1 in range(len(arr)):
@@ -147,10 +185,33 @@ def findSubArrays(arr, target):
 
     return list_arr
 
+def findSubArrays2(arr, target):
+    """version2
+    """
+    list_arr = []
+    left, right = 0, 0
+    m = 1
+
+    while right < len(arr):
+        m *= arr[right]
+        while m >= target and left <= right:
+            m  = m // arr[left]
+            left += 1
+
+        if m < target:
+            i = right
+            while i >= left:
+                list_arr.append(list(arr[i:right + 1]))
+                i -= 1
+
+        right += 1
+    
+    return list_arr
+
 def dutchFlagSort(arr):
     """Given an array containing 0s, 1s and 2s, sort the array in-place. You should treat numbers of the array as objects, hence, we can’t count 0s, 1s, and 2s to recreate the array.
     """
-    # the main idea is to keep two pointers (index0 and index2) that point to 0's at the left and 2's at the right. The third pointer (index1) is to traverse the array from left to right element by element and then push to the right if it is a two or push to the left if it is a zero.
+    # the main idea is to keep two pointers (index0 and index2) that point to 0's at the left and 2's at the right. The third pointer (index1) is to traverse the array from left to right element by element and then push to the right if it is a two or push to the left if it is a zero. No need to increment index1 when the value is 2 because index2 is going to be decremented.
     index0, index1 = 0, 0
     index2 = len(arr) - 1
     while index1 <= index2:
@@ -159,8 +220,7 @@ def dutchFlagSort(arr):
             arr[index1] = arr[index0]
             arr[index0] = temp
             index0 += 1
-            if index0 > index1:
-                index1 += 1
+            index1 += 1
         elif arr[index1] == 2:
             temp = arr[index1]
             arr[index1] = arr[index2]
@@ -170,6 +230,35 @@ def dutchFlagSort(arr):
             index1 += 1
     return arr
 
+def find_quadreplets(arr, target_sum):
+    """Problem challenge 1
+    """
+    quadreplets = []
+    arr.sort()
+    for i4 in range(len(arr)-1, 2, -1):
+        # trying to exclude duplicates
+        if i4 < len(arr)-1 and arr[i4] == arr[i4 + 1]:
+            continue
+        for i1 in range(len(arr) - 3):
+            # trying to exclude duplicates
+            if i1 > 0 and arr[i1] == arr[i1 - 1]:
+                continue
+            i2 = i1 + 1
+            i3 = i4 - 1
+            while i2 < i3:
+                if arr[i1] + arr[i2] + arr[i3] + arr[i4] > target_sum:
+                    i3 -= 1
+                elif arr[i1] + arr[i2] + arr[i3] + arr[i4] < target_sum:
+                    i2 += 1
+                else:
+                    quadreplets.append([arr[i1], arr[i2], arr[i3], arr[i4]])
+                    i2 += 1
+                    i3 -= 1
+    
+    return quadreplets
+
+
+
 if __name__ == "__main__":
-    result = dutchFlagSort([2,2,2,1,0,1,0])
+    result = find_quadreplets([2, 0, -1, 1, -2, 2], 2)
     print(f"The result is {result}")
