@@ -292,7 +292,41 @@ def compare_strings_with_backspaces(str1, str2):
 
     return True
 
+def shortest_window_sort(arr):
+    """Problem challenge 3
+    """
+    import math
+    index1, index2 = 1, len(arr) - 2
+    _min = math.inf
+    _max = -math.inf
+    index_min, index_max = None, None
+
+    while index1 < len(arr) and index2 >= 0:
+        if arr[index1] < arr[index1 - 1]:
+            if arr[index1] < _min:
+                _min = arr[index1]
+                if index_min == None:
+                    index_min = index1
+        index1 += 1
+
+        if arr[index2] > arr[index2 + 1]:
+            if arr[index2] > _max:
+                _max = arr[index2]
+                if index_max == None:
+                    index_max = index2
+        index2 -= 1
+    
+    if index_min == None or index_max == None:
+        return 0
+
+    while index_min > 0 and _min < arr[index_min - 1]:
+        index_min -= 1
+
+    while index_max < len(arr) - 1 and _max > arr[index_max + 1]:
+        index_max += 1
+
+    return index_max - index_min + 1
 
 if __name__ == "__main__":
-    result = compare_strings_with_backspaces("a#c", "b")
+    result = shortest_window_sort([1])
     print(f"The result is {result}")
