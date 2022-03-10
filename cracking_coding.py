@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 def zerofy_matrix_inplace(matrix):
     """place complexity is O(1) and time complexity is O(NM)
     """
@@ -162,6 +165,90 @@ def URLify(str, length):
 
     return "".join(lstr)
 
+def subsets(nums):
+        def combine(elem, arr):
+            if not arr:
+                return [[], [elem]]
+            lst = deepcopy(arr)
+            for l in lst:
+                l.append(elem)
+            return arr + lst
+               
+        if not len(nums):
+            return []
+    
+        return combine(nums[0], subsets(nums[1:]))
+        
+def recursive_product(a, b):
+    # without multiplication or division
+    if a == 0 or b == 0:
+        return 0
+    smaller = a if a < b else b
+    bigger = b if a < b else a
+
+    return (bigger << (smaller & 1)) + recursive_product(smaller >> 1, bigger)
+
+def permute(string):
+    if len(string) == 0:
+        return []
+    
+    output = []
+    def permute_with_prefix(str, pre):
+        if len(str) == 0:
+            output.append(pre)
+            return
+        for i in range(len(str)):
+            permute_with_prefix(str[0:i] + str[i+1:], pre + str[i])
+        
+        return
+
+    permute_with_prefix(string, "")
+    return output
+
+def permute_dups(string):
+    if len(string) == 0:
+        return []
+    
+    output = []
+    def permute_with_prefix(str, pre):
+        if len(str) == 0:
+            output.append(pre)
+            return
+        char_dict = {}
+        for i in range(len(str)):
+            if str[i] not in char_dict:
+                permute_with_prefix(str[0:i] + str[i+1:], pre + str[i])
+                char_dict[str[i]] = 1
+        
+        return
+
+    permute_with_prefix(string, "")
+    return output
+
+def evaluate_boolean(string, result):
+    if len(string) == 1:
+        if int(string[0]) == result:
+            return 1
+        return 0
+
+    count = 0
+    for i in range(1, len(string), 2):
+        left = int(string[i-1])
+        right = int(string[i+1])
+        op = string[i]
+        out = None
+        if op == '^':
+            out = left ^ right
+        elif op == '|':
+            out = left | right
+        elif op == '&':
+            out = left & right
+        
+        count += evaluate_boolean(string[0:i-1] + f'{out}' + string[i+2:], result)
+    
+    return count
+
+
 if __name__ == "__main__":
     """
     s = "Hello Mr John Smith      "
@@ -189,6 +276,7 @@ if __name__ == "__main__":
     m =  [[1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12], [13, 14, 15, 16, 17, 18], [19, 20, 21, 22, 23, 24], [25, 26, 27, 28, 29, 30], [31, 32, 33, 34, 35, 36]]
     print(f"The rotated matrix is {rotate_matrix_inplace(m)}")
     """
+    """
     m = [
                 [1, 2, 3, 4, 0],
                 [6, 0, 8, 9, 10],
@@ -198,5 +286,12 @@ if __name__ == "__main__":
             ]
     m1 = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
     print(f"The new matrix is {zerofy_matrix_inplace(m1)}")
+    """
+    #print(subsets([1,2,3]))
+    #print(recursive_product(5, 7))
+    #print(permute("ABBAB"))
+    #print(permute_dups("ABBAB"))
+    print(evaluate_boolean("0&0&0&1^1|0", True))
+    
     
     
